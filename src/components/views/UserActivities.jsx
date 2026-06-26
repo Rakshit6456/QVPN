@@ -72,6 +72,7 @@ export default function UserActivities({ db }) {
         <SectionCard
           title="Action Logs"
           subtitle="Full user event history"
+          description="Authentication, config changes, and access events per user"
           action={<ViewToggle expanded={showAll} onToggle={() => setShowAll(v=>!v)} />}
         >
           <TableHead cols={[

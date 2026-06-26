@@ -91,7 +91,7 @@ export default function Dashboard() {
       <div style={{ display: "flex", flexDirection: "column", flex: 1, overflow: "hidden" }}>
         <Header db={db} />
 
-        <div style={{ flex: 1, padding: "24px 28px", overflowY: "auto", overflowX: "hidden", position: "relative" }}>
+        <div style={{ flex: 1, padding: "28px 32px", overflowY: "auto", overflowX: "hidden", position: "relative" }}>
           {activeTab === "overview"    && <Overview db={db} activeSessions={activeSessions} activeKeys={activeKeys} totalDown={totalDown} totalUp={totalUp} blockedCount={blockedCount} getClientNameBySession={getClientNameBySession} />}
           {activeTab === "algorithms"  && <Algorithms db={db} />}
           {activeTab === "sessions"    && <Sessions db={db} />}

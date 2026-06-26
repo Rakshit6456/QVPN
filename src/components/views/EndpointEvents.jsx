@@ -59,6 +59,7 @@ export default function EndpointEvents({ db, getClientNameBySession }) {
         <SectionCard
           title="Device Events"
           subtitle="USB and hardware device insertions detected on endpoints"
+          description="USB and hardware insertions detected on monitored endpoints"
           action={<ViewToggle expanded={showAllDevice} onToggle={() => setShowAllDevice(v => !v)} />}
         >
           <TableHead cols={[
@@ -87,6 +88,7 @@ export default function EndpointEvents({ db, getClientNameBySession }) {
         <SectionCard
           title="Process Events"
           subtitle="Processes launched or terminated on monitored endpoints"
+          description="Processes launched or terminated on client endpoints"
           action={<ViewToggle expanded={showAllProcess} onToggle={() => setShowAllProcess(v => !v)} />}
         >
           <TableHead cols={[
@@ -114,6 +116,7 @@ export default function EndpointEvents({ db, getClientNameBySession }) {
       <SectionCard
         title="VPN Heartbeats"
         subtitle="Session keepalive packets — sequence numbers and packet counters"
+        description="Keepalive packets with sequence numbers and per-session counters"
         action={<ViewToggle expanded={showAllHB} onToggle={() => setShowAllHB(v => !v)} />}
       >
         <TableHead cols={[

@@ -5,10 +5,17 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
   PieChart, Pie, Cell,
 } from "recharts";
-import { StatCard, SectionCard, TableHead, TableRow, EmptyState, PageHeader, ViewToggle, MiniBar } from "../DashboardUI";
+import { StatCard, SectionCard, TableHead, TableRow, EmptyState, PageHeader, MiniBar } from "../DashboardUI";
 import { fmtTime, fmtEventType } from "../../lib/fmt";
 
 const SEVERITY_COLORS = { CRITICAL:"#dc2626", HIGH:"#f97316", MEDIUM:"#f59e0b", LOW:"#3b82f6", INFO:"#10b981" };
+
+function trimDesc(desc) {
+  if (!desc) return "—";
+  // Strip leading [BRACKET_TAG] prefix — redundant with the Type column
+  const stripped = desc.replace(/^\[[^\]]+\]\s*/, "");
+  return stripped.length > 60 ? stripped.slice(0, 57) + "…" : stripped;
+}
 const PIE_COLORS = ["#dc2626","#f97316","#f59e0b","#3b82f6","#10b981","#8b5cf6"];
 
 function SeverityBadge({ severity }) {
@@ -36,7 +43,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 export default function MonitoringAgent({ db }) {
   const [localData, setLocalData]               = useState(null);
   const [connectionStatus, setConnectionStatus] = useState("checking");
-  const [showAllAlerts, setShowAllAlerts]       = useState(false);
+  const [alertPage, setAlertPage]               = useState(1);
   const [sortOrder, setSortOrder]               = useState("desc");
   const [expandedAlerts, setExpandedAlerts]     = useState({});
 
@@ -47,6 +54,8 @@ export default function MonitoringAgent({ db }) {
     const c = (db.clients || []).find(c => c.id === id);
     return c?.client_identifier ?? id?.slice(0, 12) ?? "Unknown";
   };
+
+  useEffect(() => { setAlertPage(1); }, [sortOrder, selectedClientId]);
 
   useEffect(() => {
     let active = true;
@@ -119,7 +128,11 @@ export default function MonitoringAgent({ db }) {
     groupedAlerts.push(cur);
   }
 
-  const displayedAlerts = showAllAlerts ? groupedAlerts : groupedAlerts.slice(0,10);
+  const ALERT_PAGE_SIZE = 15;
+  const totalAlertPages = Math.max(1, Math.ceil(groupedAlerts.length / ALERT_PAGE_SIZE));
+  const safeAlertPage   = Math.min(alertPage, totalAlertPages);
+  const alertStart      = (safeAlertPage - 1) * ALERT_PAGE_SIZE;
+  const displayedAlerts = groupedAlerts.slice(alertStart, alertStart + ALERT_PAGE_SIZE);
 
   // Severity distribution
   const sevMap = alerts.reduce((acc,a)=>{acc[a.severity]=(acc[a.severity]||0)+1;return acc;},{});
@@ -253,14 +266,12 @@ export default function MonitoringAgent({ db }) {
         <SectionCard
           title="Security Alerts"
           subtitle="Real-time host activity and intrusion detection"
+          description="Host activity detections grouped by type, sorted by time"
           action={
-            <div style={{ display:"flex",gap:12,alignItems:"center" }}>
-              <button onClick={()=>setSortOrder(s=>s==="asc"?"desc":"asc")}
-                style={{ background:"transparent",border:"1px solid #e5e7eb",borderRadius:6,padding:"4px 10px",fontSize:11,color:"#6b7280",fontWeight:600,cursor:"pointer" }}>
-                {sortOrder==="asc"?"Oldest ↑":"Newest ↓"}
-              </button>
-              <ViewToggle expanded={showAllAlerts} onToggle={()=>setShowAllAlerts(v=>!v)} />
-            </div>
+            <button onClick={()=>setSortOrder(s=>s==="asc"?"desc":"asc")}
+              style={{ background:"transparent",border:"1px solid #e5e7eb",borderRadius:6,padding:"4px 10px",fontSize:11,color:"#6b7280",fontWeight:600,cursor:"pointer" }}>
+              {sortOrder==="asc"?"Oldest ↑":"Newest ↓"}
+            </button>
           }
         >
           <TableHead cols={[{label:"Time",w:"160px"},{label:"Severity",w:"110px"},{label:"Type",w:"170px"},{label:"Description",w:"1fr"}]} />
@@ -279,7 +290,7 @@ export default function MonitoringAgent({ db }) {
                     {val:a.alert_types,w:"170px",mono:true,color:"#374151"},
                     {node:(
                       <div style={{display:"flex",alignItems:"center",gap:8}}>
-                        <span style={{fontSize:12,color:"#374151"}}>{a.description}</span>
+                        <span style={{fontSize:12,color:"#374151"}}>{trimDesc(a.description)}</span>
                         {dups>0&&(
                           <span onClick={()=>setExpandedAlerts(p=>({...p,[gid]:!p[gid]}))}
                             style={{background:"#eff6ff",color:"#1d4ed8",fontSize:10,fontWeight:700,padding:"2px 8px",borderRadius:10,cursor:"pointer",border:"1px solid #bfdbfe",whiteSpace:"nowrap"}}>
@@ -296,7 +307,7 @@ export default function MonitoringAgent({ db }) {
                           {val:fmtTime(dup.timestamp)??"—",w:"160px",muted:true,mono:true},
                           {node:<SeverityBadge severity={dup.severity}/>,w:"110px"},
                           {val:dup.alert_types,w:"170px",mono:true,muted:true},
-                          {node:<span style={{fontSize:12,color:"#9ca3af"}}>{dup.description}</span>,w:"1fr"},
+                          {node:<span style={{fontSize:12,color:"#9ca3af"}}>{trimDesc(dup.description)}</span>,w:"1fr"},
                         ]} />
                       ))}
                     </div>
@@ -305,6 +316,35 @@ export default function MonitoringAgent({ db }) {
               );
             })
           )}
+
+          {/* Pagination footer */}
+          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", padding:"12px 24px", borderTop:"1px solid #ececec" }}>
+            <span style={{ fontSize:13, color:"#6b7280" }}>
+              Showing <strong style={{ color:"#111827" }}>{alertStart + 1}–{Math.min(alertStart + ALERT_PAGE_SIZE, groupedAlerts.length)}</strong> of{" "}
+              <strong style={{ color:"#111827" }}>{groupedAlerts.length.toLocaleString()}</strong> alerts
+            </span>
+            <div style={{ display:"flex", gap:6, alignItems:"center" }}>
+              <button
+                onClick={() => setAlertPage(p => Math.max(1, p - 1))}
+                disabled={safeAlertPage === 1}
+                style={{ width:30, height:30, borderRadius:6, border:"1px solid #e5e7eb", background:safeAlertPage===1?"#f9fafb":"#ffffff", color:safeAlertPage===1?"#d1d5db":"#374151", cursor:safeAlertPage===1?"default":"pointer", display:"flex", alignItems:"center", justifyContent:"center", transition:"all 0.12s" }}
+                onMouseOver={e => { if (safeAlertPage!==1) { e.currentTarget.style.borderColor="#7a0c10"; e.currentTarget.style.color="#7a0c10"; } }}
+                onMouseOut={e => { if (safeAlertPage!==1) { e.currentTarget.style.borderColor="#e5e7eb"; e.currentTarget.style.color="#374151"; } }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+              <span style={{ fontSize:13, color:"#374151", padding:"0 8px", fontWeight:500 }}>{safeAlertPage} / {totalAlertPages}</span>
+              <button
+                onClick={() => setAlertPage(p => Math.min(totalAlertPages, p + 1))}
+                disabled={safeAlertPage === totalAlertPages}
+                style={{ width:30, height:30, borderRadius:6, border:"1px solid #e5e7eb", background:safeAlertPage===totalAlertPages?"#f9fafb":"#ffffff", color:safeAlertPage===totalAlertPages?"#d1d5db":"#374151", cursor:safeAlertPage===totalAlertPages?"default":"pointer", display:"flex", alignItems:"center", justifyContent:"center", transition:"all 0.12s" }}
+                onMouseOver={e => { if (safeAlertPage!==totalAlertPages) { e.currentTarget.style.borderColor="#7a0c10"; e.currentTarget.style.color="#7a0c10"; } }}
+                onMouseOut={e => { if (safeAlertPage!==totalAlertPages) { e.currentTarget.style.borderColor="#e5e7eb"; e.currentTarget.style.color="#374151"; } }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+            </div>
+          </div>
         </SectionCard>
 
         <div style={{ display:"flex",flexDirection:"column",gap:16 }}>

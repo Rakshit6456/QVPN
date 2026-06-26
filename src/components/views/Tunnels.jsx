@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { StatusBadge, StatCard, SectionCard, TableHead, TableRow, EmptyState, PageHeader, ViewToggle } from "../DashboardUI";
 import { fmtTime, fmtDetails } from "../../lib/fmt";
 
-const PAGE_SIZE = 50;
+const PAGE_SIZE = 15;
 
 export default function Tunnels({ db, getClientNameBySession }) {
   const [statePage, setStatePage] = useState(1);
@@ -47,6 +47,7 @@ export default function Tunnels({ db, getClientNameBySession }) {
         <SectionCard
           title="Live Tunnel Connectivity"
           subtitle={`Assigned IPs, heartbeat status, and remote endpoints — ${totalStates.toLocaleString()} total`}
+          description="Active clients with assigned virtual IPs and heartbeat status"
         >
           <TableHead cols={[
             { label: "Client ID", w: "160px" }, { label: "Remote IP", w: "145px" },
@@ -125,6 +126,7 @@ export default function Tunnels({ db, getClientNameBySession }) {
         <SectionCard
           title="Tunnel Event Log"
           subtitle="Connection events, handshakes, and key rotation history"
+          description="Handshakes, disconnects, and key rotation in chronological order"
           action={<ViewToggle expanded={showAllEvents} onToggle={() => setShowAllEvents(v=>!v)} />}
         >
           <TableHead cols={[

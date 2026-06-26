@@ -167,6 +167,7 @@ export default function Gateway({ db }) {
       <SectionCard
         title="Tunnel & Session Details"
         subtitle={`${total.toLocaleString()} records`}
+        description="Matched tunnel states with KEM session, traffic, and heartbeat data"
       >
         <TableHead cols={[
           { label: "Client",       w: "160px" },

@@ -187,7 +187,7 @@ export default function Algorithms({ db }) {
       </div>
 
       {/* Algorithm Details Table */}
-      <SectionCard title="Algorithm Security Reference" subtitle="NIST PQC standardization info for active algorithms">
+      <SectionCard title="Algorithm Security Reference" subtitle="NIST PQC standardization info for active algorithms" description="NIST standardization status, security level, and cryptographic grade per algorithm">
         <TableHead cols={[
           { label: "Algorithm",    w: "160px" },
           { label: "NIST Name",    w: "140px" },

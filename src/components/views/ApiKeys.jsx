@@ -164,6 +164,7 @@ export default function ApiKeys({ db }) {
       <SectionCard
         title="All API Keys"
         subtitle={`${filtered.length} key${filtered.length !== 1 ? "s" : ""}${statusFilter !== "all" ? ` · ${statusFilter}` : ""}${search ? ` · "${search}"` : ""}`}
+        description="Issued credentials with scope, status, and last-used timestamps"
         action={
           <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
             {/* Search */}

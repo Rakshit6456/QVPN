@@ -123,6 +123,7 @@ export default function Overview({ db, activeSessions, activeKeys, totalDown, to
         <SectionCard
           title="Recent Tunnel Events"
           subtitle="Latest connection state changes"
+          description="Latest connection state changes across all tunnels"
           action={<ViewToggle expanded={showAllEvents} onToggle={() => setShowAllEvents(v => !v)} />}
         >
           <TableHead cols={[{ label: "Time", w: "160px" }, { label: "Status", w: "150px" }, { label: "Client", w: "1fr" }]} />
@@ -140,6 +141,7 @@ export default function Overview({ db, activeSessions, activeKeys, totalDown, to
         <SectionCard
           title="Network Activities"
           subtitle="Security events from network_activities"
+          description="Inbound and outbound events with destination IPs and verdicts"
           action={<ViewToggle expanded={showAllNetwork} onToggle={() => setShowAllNetwork(v => !v)} />}
         >
           <TableHead cols={[{ label: "Time", w: "160px" }, { label: "Dest IP", w: "140px" }, { label: "Status", w: "1fr" }]} />

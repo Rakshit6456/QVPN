@@ -123,7 +123,15 @@ export default function Sidebar({ activeTab, setActiveTab, collapsed, setCollaps
           /* collapsed: just the chip portion of the logo */
           <Image src="/qnnx-logo.png" alt="QNNX" width={36} height={36} style={{ objectFit: "contain", objectPosition: "left center" }} />
         ) : (
-          <Image src="/qnnx-logo.png" alt="QNNX" width={130} height={36} style={{ objectFit: "contain", objectPosition: "left center" }} />
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <Image src="/qnnx-logo.png" alt="QNNX" width={130} height={36} style={{ objectFit: "contain", objectPosition: "left center" }} />
+            <span style={{
+              fontSize: 11, fontWeight: 700, color: "#9ca3af",
+              letterSpacing: "0.12em", textTransform: "uppercase",
+              borderLeft: "1px solid #e5e7eb", paddingLeft: 8,
+              lineHeight: 1,
+            }}>QVPN</span>
+          </div>
         )}
 
         {/* Collapse toggle */}

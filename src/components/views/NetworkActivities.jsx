@@ -17,7 +17,7 @@ const CustomTooltip = ({ active, payload, label }) => {
   );
 };
 
-const PAGE_SIZE = 100;
+const PAGE_SIZE = 15;
 
 export default function NetworkActivities({ db }) {
   const [page, setPage] = useState(1);
@@ -107,6 +107,7 @@ export default function NetworkActivities({ db }) {
       <SectionCard
         title="Traffic Audit Log"
         subtitle={`Full event history from network_activities — ${totalRecords.toLocaleString()} total`}
+        description="Full traffic audit — blocked, allowed, and inspected flows with destination IPs"
       >
         <TableHead cols={[
           { label: "Timestamp", w: "170px" }, { label: "Client ID", w: "150px" },

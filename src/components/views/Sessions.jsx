@@ -100,6 +100,7 @@ export default function Sessions({ db }) {
       <SectionCard
         title="Secure PQC Tunnels"
         subtitle="KEM algorithm, state, and live traffic per session"
+        description="Active sessions with post-quantum KEM algorithm and live traffic counters"
         action={<ViewToggle expanded={showAll} onToggle={() => setShowAll(v=>!v)} />}
       >
         <TableHead cols={[
