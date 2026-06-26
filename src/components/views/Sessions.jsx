@@ -19,8 +19,9 @@ export default function Sessions({ db }) {
   const [showAll, setShowAll] = useState(false);
   const displayedSessions = showAll ? db.sessions : db.sessions.slice(0, 8);
 
-  const activeSessions  = db.sessions.filter(s => s.tunnel_status?.toLowerCase() === "established").length;
-  const inactiveSessions = db.sessions.filter(s => s.tunnel_status?.toLowerCase() !== "established").length;
+  const ACTIVE_STATUSES = new Set(["established", "connected", "active", "connecting", "reconnecting", "handshake"]);
+  const activeSessions   = db.sessions.filter(s => ACTIVE_STATUSES.has(s.tunnel_status?.toLowerCase())).length;
+  const inactiveSessions = db.sessions.filter(s => !ACTIVE_STATUSES.has(s.tunnel_status?.toLowerCase())).length;
   const totalTraffic    = db.trafficStats.reduce((a, t) => a + (t.bytes_received || 0) + (t.bytes_sent || 0), 0);
 
   // Top clients by traffic
@@ -87,7 +88,7 @@ export default function Sessions({ db }) {
                       </span>
                       <span style={{ fontSize: 12, color: "#7a0c10", fontWeight: 700 }}>{fmtBytes(total)}</span>
                     </div>
-                    <MiniBar value={Math.round((total/maxBytes)*100)} color={s.tunnel_status?.toLowerCase() === "established" ? "#10b981" : "#9ca3af"} />
+                    <MiniBar value={Math.round((total/maxBytes)*100)} color={ACTIVE_STATUSES.has(s.tunnel_status?.toLowerCase()) ? "#10b981" : "#9ca3af"} />
                   </div>
                 );
               })

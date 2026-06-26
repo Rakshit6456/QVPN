@@ -41,5 +41,5 @@ export function fmtDetails(details) {
 // Make an event type human-readable
 export function fmtEventType(type) {
   if (!type) return "—";
-  return type.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+  return type.replace(/_/g, " ").toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
 }

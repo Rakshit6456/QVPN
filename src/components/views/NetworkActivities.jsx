@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
 import { StatusBadge, StatCard, SectionCard, TableHead, TableRow, EmptyState, PageHeader } from "../DashboardUI";
-import { fmtTime, shortId } from "../../lib/fmt";
+import { fmtTime, shortId, fmtEventType } from "../../lib/fmt";
 
 const COLORS = ["#dc2626","#10b981","#f59e0b","#3b82f6","#8b5cf6"];
 
@@ -39,7 +39,7 @@ export default function NetworkActivities({ db }) {
     const k = n.event_type || "unknown";
     acc[k] = (acc[k]||0)+1; return acc;
   }, {});
-  const eventData = Object.entries(eventMap).map(([name, value]) => ({ name, value }));
+  const eventData = Object.entries(eventMap).map(([name, value]) => ({ name: fmtEventType(name), value }));
 
   const ipMap = db.networkActivities.reduce((acc, n) => {
     const ip = getDestIp(n);

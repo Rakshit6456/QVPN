@@ -6,7 +6,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid,
 } from "recharts";
 import { StatusBadge, StatCard, SectionCard, TableHead, TableRow, EmptyState, PageHeader, ViewToggle } from "../DashboardUI";
-import { fmtTime, fmtBytes, shortId, fmtDetails } from "../../lib/fmt";
+import { fmtTime, fmtBytes, shortId, fmtDetails, fmtEventType } from "../../lib/fmt";
 
 const COLORS = ["#7a0c10", "#10b981", "#3b82f6", "#f59e0b", "#8b5cf6", "#06b6d4"];
 
@@ -35,7 +35,7 @@ export default function Overview({ db, activeSessions, activeKeys, totalDown, to
     acc[k] = (acc[k] || 0) + 1;
     return acc;
   }, {});
-  const eventChartData = Object.entries(eventTypeCounts).map(([name, value]) => ({ name, value }));
+  const eventChartData = Object.entries(eventTypeCounts).map(([name, value]) => ({ name: fmtEventType(name), value }));
 
   // Chart data: network activity types
   const netTypeCounts = db.networkActivities.reduce((acc, n) => {
@@ -43,7 +43,7 @@ export default function Overview({ db, activeSessions, activeKeys, totalDown, to
     acc[k] = (acc[k] || 0) + 1;
     return acc;
   }, {});
-  const netChartData = Object.entries(netTypeCounts).map(([name, value]) => ({ name, value }));
+  const netChartData = Object.entries(netTypeCounts).map(([name, value]) => ({ name: fmtEventType(name), value }));
 
   return (
     <div>

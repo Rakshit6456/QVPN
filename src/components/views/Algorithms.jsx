@@ -5,6 +5,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, RadarChart, Radar, PolarGrid, PolarAngleAxis,
 } from "recharts";
 import { StatCard, SectionCard, PageHeader, TableHead, TableRow, EmptyState } from "../DashboardUI";
+import { fmtEventType } from "../../lib/fmt";
 
 function fmtBytes(bytes, decimals = 1) {
   if (!+bytes) return "0 B";
@@ -70,7 +71,7 @@ export default function Algorithms({ db }) {
     const ks = s.kem_state || "unknown";
     kemStateMap[ks] = (kemStateMap[ks] || 0) + 1;
   });
-  const kemStateData = Object.entries(kemStateMap).map(([name, value]) => ({ name, value }));
+  const kemStateData = Object.entries(kemStateMap).map(([name, value]) => ({ name: fmtEventType(name), value }));
 
   // Session status distribution
   const statusMap = {};
@@ -78,7 +79,7 @@ export default function Algorithms({ db }) {
     const st = s.tunnel_status || "unknown";
     statusMap[st] = (statusMap[st] || 0) + 1;
   });
-  const statusData = Object.entries(statusMap).map(([name, value]) => ({ name, value }));
+  const statusData = Object.entries(statusMap).map(([name, value]) => ({ name: fmtEventType(name), value }));
 
   const uniqueAlgos = algoList.length;
   const dominantAlgo = algoList[0]?.name ?? "—";

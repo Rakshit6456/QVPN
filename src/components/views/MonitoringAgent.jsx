@@ -6,7 +6,7 @@ import {
   PieChart, Pie, Cell,
 } from "recharts";
 import { StatCard, SectionCard, TableHead, TableRow, EmptyState, PageHeader, ViewToggle, MiniBar } from "../DashboardUI";
-import { fmtTime } from "../../lib/fmt";
+import { fmtTime, fmtEventType } from "../../lib/fmt";
 
 const SEVERITY_COLORS = { CRITICAL:"#dc2626", HIGH:"#f97316", MEDIUM:"#f59e0b", LOW:"#3b82f6", INFO:"#10b981" };
 const PIE_COLORS = ["#dc2626","#f97316","#f59e0b","#3b82f6","#10b981","#8b5cf6"];
@@ -123,7 +123,7 @@ export default function MonitoringAgent({ db }) {
 
   // Severity distribution
   const sevMap = alerts.reduce((acc,a)=>{acc[a.severity]=(acc[a.severity]||0)+1;return acc;},{});
-  const sevData = Object.entries(sevMap).map(([name,value])=>({name,value}));
+  const sevData = Object.entries(sevMap).map(([name,value])=>({name: fmtEventType(name),value}));
 
   // Historical metrics for chart (filtered by selected client)
   const metricsChart = clientMetrics.slice(-20).reverse().map((m,i)=>({

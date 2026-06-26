@@ -15,7 +15,7 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata = {
   title: "QVPN — Admin Console",
-  description: "Post-Quantum Cryptography VPN Administration Dashboard",
+  robots: { index: false, follow: false },
 };
 
 export default function RootLayout({ children }) {

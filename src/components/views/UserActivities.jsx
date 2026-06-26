@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { StatusBadge, StatCard, SectionCard, TableHead, TableRow, EmptyState, PageHeader, ViewToggle } from "../DashboardUI";
-import { fmtTime, fmtDetails, shortId } from "../../lib/fmt";
+import { fmtTime, fmtDetails, shortId, fmtEventType } from "../../lib/fmt";
 
 const COLORS = ["#10b981","#dc2626","#3b82f6","#8b5cf6","#f59e0b","#7a0c10"];
 
@@ -28,7 +28,7 @@ export default function UserActivities({ db }) {
     const k = u.event_type || "unknown";
     acc[k] = (acc[k]||0)+1; return acc;
   }, {});
-  const eventData = Object.entries(eventMap).map(([name, value]) => ({ name, value }));
+  const eventData = Object.entries(eventMap).map(([name, value]) => ({ name: fmtEventType(name), value }));
 
   return (
     <div>

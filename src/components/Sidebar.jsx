@@ -52,6 +52,11 @@ const ICONS = {
       <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
     </svg>
   ),
+  apikeys: (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+    </svg>
+  ),
 };
 
 const NAV_GROUPS = [
@@ -74,8 +79,9 @@ const NAV_GROUPS = [
   {
     label: "System & Settings",
     items: [
-      { id: "monitoring", label: "Monitoring Agent" },
-      { id: "endpoint",   label: "Endpoint Events"  },
+      { id: "apikeys",    label: "API Keys"          },
+      { id: "monitoring", label: "Monitoring Agent"  },
+      { id: "endpoint",   label: "Endpoint Events"   },
     ],
   },
 ];
