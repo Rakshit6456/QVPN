@@ -47,7 +47,7 @@ export default function Overview({ db, activeSessions, activeKeys, totalDown, to
 
   return (
     <div>
-      <PageHeader title="Admin Overview" subtitle="Real-time monitoring — all data mapped to Supabase schemas" />
+      <PageHeader title="Admin Overview" subtitle="Real-time monitoring" />
 
       {/* Stat Cards */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 16 }}>
