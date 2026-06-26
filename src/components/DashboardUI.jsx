@@ -174,13 +174,16 @@ export function TableRow({ cols, last }) {
     >
       {cols.map((c, i) => (
         <span key={i} style={{
-          fontSize: 13,
+          fontSize: c.mono ? 12 : 13,
           color: c.muted ? "#9ca3af" : (c.color || "#374151"),
           fontWeight: c.bold ? 600 : (c.mono ? 500 : 400),
           fontFamily: c.mono ? "var(--font-mono, monospace)" : "inherit",
-          overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-          fontSize: c.mono ? 12 : 13,
+          overflow: c.node ? "visible" : "hidden",
+          textOverflow: c.node ? undefined : "ellipsis",
+          whiteSpace: "nowrap",
           letterSpacing: c.mono ? "0.02em" : "inherit",
+          display: c.node ? "flex" : undefined,
+          alignItems: c.node ? "center" : undefined,
         }}>
           {c.node ?? c.val}
         </span>
