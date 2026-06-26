@@ -14,6 +14,7 @@ import MonitoringAgent from "../components/views/MonitoringAgent";
 import Algorithms from "../components/views/Algorithms";
 import EndpointEvents from "../components/views/EndpointEvents";
 import ApiKeys from "../components/views/ApiKeys";
+import Gateway from "../components/views/Gateway";
 
 const PAGE_TITLES = {
   overview:   "Overview",
@@ -97,6 +98,7 @@ export default function Dashboard() {
           {activeTab === "tunnels"     && <Tunnels db={db} getClientNameBySession={getClientNameBySession} />}
           {activeTab === "network"     && <NetworkActivities db={db} />}
           {activeTab === "users"       && <UserActivities db={db} />}
+          {activeTab === "gateway"     && <Gateway db={db} />}
           {activeTab === "apikeys"     && <ApiKeys db={db} />}
           {activeTab === "monitoring"  && <MonitoringAgent db={db} />}
           {activeTab === "endpoint"    && <EndpointEvents db={db} getClientNameBySession={getClientNameBySession} />}
